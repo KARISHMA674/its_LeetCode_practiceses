@@ -1,0 +1,42 @@
+class Solution(object):
+
+  def minSwaps(self, nums):
+    """
+        :type nums: List[int]
+        :rtype: int
+        """
+
+    def digit_sum(n):
+      s = 0
+      while n > 0:
+        s += n % 10
+        n //= 10
+      return s
+
+    n = len(nums)
+
+    
+    indexed_nums = [(digit_sum(val), val, i) for i, val in enumerate(nums)]
+
+    indexed_nums.sort(key=lambda x: (x[0], x[1]))
+
+    visited = [False] * n
+    swaps = 0
+
+    for i in range(n):
+      
+      if visited[i] or indexed_nums[i][2] == i:
+        continue
+
+      
+      cycle_size = 0
+      curr = i
+      while not visited[curr]:
+        visited[curr] = True
+        curr = indexed_nums[curr][2]
+        cycle_size += 1
+
+      if cycle_size > 1:
+        swaps += cycle_size - 1
+
+    return swaps
